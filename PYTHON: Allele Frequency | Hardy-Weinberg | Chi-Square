@@ -1,0 +1,61 @@
+import scipy.stats as stats
+
+def hardy_weinberg_test(observed_counts):
+    """
+    Perform Hardy-Weinberg equilibrium test on a given set of genotype counts.
+
+    Args:
+    observed_counts (dict): Dictionary with genotype counts e.g., {'AA': 20, 'GA': 30, 'GG': 50}
+
+    Returns:
+    dict: Dictionary containing allele frequencies, expected counts, chi-square test result, and interpretation.
+    """
+    # Step 1: Calculate allele frequencies
+    # Extracting counts for each genotype
+    count_AA = observed_counts['AA']
+    count_GA = observed_counts['GA']
+    count_GG = observed_counts['GG']
+
+    # Total number of alleles
+    total_alleles = 2 * (count_AA + count_GA + count_GG)
+
+    # Frequency of allele A
+    p = (2 * count_AA + count_GA) / total_alleles
+
+    # Frequency of allele G
+    q = (2 * count_GG + count_GA) / total_alleles
+
+    # Step 2: Calculate expected counts under Hardy-Weinberg equilibrium
+    total_individuals = count_AA + count_GA + count_GG
+    expected_AA = (p ** 2) * total_individuals
+    expected_GA = (2 * p * q) * total_individuals
+    expected_GG = (q ** 2) * total_individuals
+
+    # Step 3: Perform chi-square test
+    observed = [count_AA, count_GA, count_GG]
+    expected = [expected_AA, expected_GA, expected_GG]
+    
+    chi2, p_value = stats.chisquare(observed, expected)
+
+    # Interpretation based on p-value
+    alpha = 0.05
+    if p_value < alpha:
+        interpretation = "Significant difference from Hardy-Weinberg equilibrium (Reject H0)"
+    else:
+        interpretation = "No significant difference from Hardy-Weinberg equilibrium (Fail to reject H0)"
+
+    # Compile results
+    results = {
+        'Allele frequencies': {'p (A)': p, 'q (G)': q},
+        'Expected counts': {'AA': expected_AA, 'GA': expected_GA, 'GG': expected_GG},
+        'Chi-square test': {'Chi2 value': chi2, 'p-value': p_value},
+        'Interpretation': interpretation
+    }
+
+    return results
+
+# Example use of the function with hypothetical genotype counts
+example_counts = {'AA': 20, 'GA': 30, 'GG': 50}
+results = hardy_weinberg_test(example_counts)
+
+results
