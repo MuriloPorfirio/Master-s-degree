@@ -1,0 +1,75 @@
+# ----------------------- Haplo.stats ----------------------- 
+
+#Separando as colunas
+install.packages('X')
+
+library(haplo.stats)
+library(dplyr)
+library(tidyr)
+library(stringr)
+
+library(readxl)
+Murilo <- read_xlsx(choose.files(), sheet = "Planilha2")
+
+SNPsseparadosNAT <- Murilo %>% 
+  separate_wider_delim(rs11188059, "/", names = c("rs11188059_1", "rs11188059_2")) %>%
+  separate_wider_delim(rs2860840, "/", names = c("rs2860840_1", "rs2860840_2"))
+
+
+
+#No haplo.em
+
+#removi coluna "ID"
+
+SNPsNATSemID <- SNPsseparadosNAT
+SNPsNATSemID$ID <- NULL
+
+
+#cada locus tem um par de colunas adjascentes de alelos
+#a ordem das colunas é a ordem dos loci em um cromossomo
+#se houver N loci, o nº de colunas é 2N
+
+SNPsNATSemID2 <- SNPsNATSemID
+
+# Trocando 0 = G / 1 = A no rs11188059
+for (i in 1:nrow(SNPsNATSemID2)) {
+  if (SNPsNATSemID2[i, 1] == 0) {SNPsNATSemID2[i, 1] <- "G"}}
+
+for (i in 1:nrow(SNPsNATSemID2)) {
+  if (SNPsNATSemID2[i, 1] == 1) {SNPsNATSemID2[i, 1] <- "A"}}
+
+
+for (i in 1:nrow(SNPsNATSemID2)) {
+  if (SNPsNATSemID2[i, 2] == 0) {SNPsNATSemID2[i, 2] <- "G"}}
+
+for (i in 1:nrow(SNPsNATSemID2)) {
+  if (SNPsNATSemID2[i, 2] == 1) {SNPsNATSemID2[i, 2] <- "A"}}
+
+
+# Trocando 0 = T / 1 = C no rs2860840
+for (i in 1:nrow(SNPsNATSemID2)) {
+  if (SNPsNATSemID2[i, 3] == 0) {SNPsNATSemID2[i, 3] <- "T"}}
+
+for (i in 1:nrow(SNPsNATSemID2)) {
+  if (SNPsNATSemID2[i, 3] == 1) {SNPsNATSemID2[i, 3] <- "C"}}
+
+
+for (i in 1:nrow(SNPsNATSemID2)) {
+  if (SNPsNATSemID2[i, 4] == 0) {SNPsNATSemID2[i, 4] <- "T"}}
+
+for (i in 1:nrow(SNPsNATSemID2)) {
+  if (SNPsNATSemID2[i, 4] == 1) {SNPsNATSemID2[i, 4] <- "C"}}
+
+#talvez comece aqui murilo
+
+
+resulthaploNAT <- haplo.em(as.matrix(SNPsNATSemID2), locus.label = c('rs2860840', 'rs11188059'), miss.val=NA)
+
+
+
+library(openxlsx)
+resultadoNAT <- summary(resulthaploNAT)
+
+
+library(clipr)
+write.xlsx(resultadoNAT, 'resultadoNAT.xlsx')
