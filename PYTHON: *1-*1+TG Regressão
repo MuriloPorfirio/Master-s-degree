@@ -1,0 +1,52 @@
+import numpy as np # Biblioteca usada para realizar cálculos numéricos em arrays e matrizes de forma eficiente.
+import matplotlib.pyplot as plt # Biblioteca de plotagem usada para criar gráficos e visualizações de dados.
+from sklearn.linear_model import LinearRegression # Biblioteca de aprendizado de máquina, e essa importação é usada para acessar a função de regressão linear, permitindo realizar análises de regressão.
+import seaborn as sns # Seaborn é uma biblioteca de visualização de dados baseada no Matplotlib que fornece uma interface de alto nível para desenhar gráficos estatísticos atraentes.
+from scipy import stats
+# Atualizando o código para gerar apenas um gráfico e incluir descrições dos resultados
+
+# Dados de PRU
+pru_values = np.array([
+    252, 229, 167, 219, 105, 181, 106, 258, 107, 163, 165, 57, 280, 98, 159
+])
+
+# Dados de presença/ausência do haplótipo (Presença = 1, Ausência = -0)
+haplotype_presence = np.array([1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0])
+
+# Reshape dos dados para se adequar ao formato exigido pela função de regressão do sklearn
+X = haplotype_presence.reshape(-1, 1)
+Y = pru_values
+
+# Criação e ajuste do modelo de regressão linear
+model = LinearRegression()
+model.fit(X, Y)
+
+# Predições do modelo para visualização da linha de regressão
+predictions = model.predict(X)
+
+# Calculando o coeficiente de determinação R^2
+r_squared = model.score(X, Y)
+
+# Coeficientes do modelo
+coefficient = model.coef_[0]
+intercept = model.intercept_
+
+# Realizando o teste t para obter o valor-p
+t_statistic, p_value = stats.ttest_ind(Y[X.flatten() == 1], Y[X.flatten() == -1])
+
+# Visualização dos dados e da linha de regressão em um único gráfico
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x=haplotype_presence, y=pru_values, color='blue', label='Dados Observados')
+sns.lineplot(x=haplotype_presence, y=predictions, color='red', label='Linha de Regressão')
+
+plt.title('Regressão Linear da Presença de um único alelo do Haplótipo em relação a PRU em individuos *1/*1')
+plt.xlabel('Presença/Ausência do Haplótipo')
+plt.ylabel('PRU (Agregação Plaquetária)')
+plt.legend()
+plt.show()
+
+# Exibindo e descrevendo as métricas da regressão
+print(f'Coeficiente de Determinação (R^2): {r_squared:.4f}')
+print(f'Coeficiente do Modelo (Efeito do Haplótipo): {coefficient:.4f}')
+print(f'Intercepto do Modelo (Valor de PRU quando o Haplótipo está ausente): {intercept:.4f}')
+print(f'Valor-p do Teste t (Significância Estatística do Efeito do Haplótipo): {p_value:.4e}')
