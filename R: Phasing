@@ -69,7 +69,7 @@ resulthaploNAT <- haplo.em(as.matrix(SNPsNATSemID2), locus.label = c('rs2860840'
 
 library(openxlsx)
 resultadoNAT <- summary(resulthaploNAT)
-
+resulthaploNAT[["haplotype"]]
 
 library(clipr)
 write.xlsx(resultadoNAT, 'resultadoNAT.xlsx')
