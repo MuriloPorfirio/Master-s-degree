@@ -7,25 +7,27 @@ import matplotlib.pyplot as plt
 from scipy.stats import norm
 
 # Now, just replace the numbers below with your data of interest:
-data = [185, 195, 210, 190, 220, 205, 215, 230, 225, 240, 200, 210, 225, 190, 195, 205, 180, 195, 220, 210, 215]
+data = [128, 155, 258, 280, 60, 173, 157, 58, 75, 137, 294, 312, 247, 168, 293, 252, 131, 229,
+167, 173, 219, 107, 101, 102, 163, 112, 165, 181, 57, 280, 101, 98, 159, 324, 258, 196, 175,
+167, 185, 221, 68, 186, 187, 38, 68, 79, 262, 115, 178, 109, 183, 200, 119, 166]
 
 # Assuming 'data' is the list of your data
 mean, std = norm.fit(data)  # Adjusting the parameters of the normal distribution
 
 # Creating the data histogram
 plt.figure(figsize=(10, 6))
-plt.hist(data, bins=30, alpha=0.5, color='g', density=True, label='Data Histogram')
+plt.hist(data, bins=30, alpha=0.5, color='red', density=True, label='Histograma dos dados')
 
 # Creating the Superimposed Normal Distribution Curve
 xmin, xmax = plt.xlim()
 x = np.linspace(xmin, xmax, 100)
 p = norm.pdf(x, mean, std)
-plt.plot(x, p, 'k', linewidth=2, label='Fitted Normal Distribution')
+plt.plot(x, p, 'k', linewidth=2, label='Distribuição normal ajustada')
 
 # Configuring the chart
-plt.title('Normality Plot with Fitted Normal Distribution')
-plt.xlabel('Data Points')
-plt.ylabel('Density')
+plt.title('Gráfico de normalidade dos valores de PRU')
+plt.xlabel('Unidades de reação P2Y12')
+plt.ylabel('Densidade')
 plt.legend()
 plt.grid(True)
 plt.show()
