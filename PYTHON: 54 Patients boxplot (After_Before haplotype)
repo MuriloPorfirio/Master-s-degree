@@ -1,3 +1,82 @@
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
+# Nomes dos grupos correspondentes a cada conjunto de dados
+group_names = ['(N=11) *1/*2', '(N=4) *2/*17', '(N=22) *1/*1', '(N=14) *1/*17', '(N=3) *17/*17']
+
+# Valores para cada grupo
+# Valores para cada grupo
+data_values = [
+    [128, 155, 258, 280, 60, 173, 157, 58, 75, 137, 294],  # Valores para o grupo 1 (*1/*2)
+    [312, 247, 168, 293],  # Valores para o grupo 2 (*2/*17)
+    [252, 131, 229, 167, 173, 219, 107, 101, 102, 163, 112, 165, 181, 57, 280, 101, 98, 159, 324, 258, 196, 175],  # Valores para o grupo 3 (*1/*1)
+    [167, 185, 221, 68, 186, 187, 38, 68, 79, 262, 115, 178, 109, 183],  # Valores para o grupo 4 (*1/*17)
+    [200, 119, 166]  # Valores para o grupo 5 (*17/*17)
+]
+
+
+# Cores específicas para cada grupo
+group_colors = ['red', 'green', 'blue', 'orange', 'purple']
+
+# Criando uma lista de categorias correspondente aos dados
+categories = []
+for group_name, values in zip(group_names, data_values):
+    categories.extend([group_name] * len(values))
+
+# Concatenando todos os dados em um único conjunto e criando a variável categórica
+data_combined = np.concatenate(data_values)
+category_feature = np.array(categories)
+
+# Armazenando os dados em um DataFrame do pandas
+df = pd.DataFrame({'variavel_numerica': data_combined, 'variavel_categorica': category_feature})
+
+# Criando a figura do gráfico
+fig, ax = plt.subplots(figsize=(12, 6))
+
+# Exibindo cada grupo no gráfico
+boxplot_data = []
+positions = np.arange(1, len(group_names) + 1)
+
+for i, (group, color) in enumerate(zip(group_names, group_colors)):
+    y = df[df['variavel_categorica'] == group]['variavel_numerica']
+    x = np.random.normal(i + 1, 0.04, size=len(y))
+    ax.scatter(x, y, alpha=0.8, color=color)  # Usando cores específicas para cada grupo
+    boxplot_data.append(y)
+
+# Adicionando boxplots com interiores totalmente transparentes e medianas destacadas
+for i, data in enumerate(boxplot_data):
+    if data.size > 0:  # Checa se o grupo possui dados para evitar erros
+        ax.boxplot(data, positions=[positions[i]], widths=0.6, patch_artist=True,
+                   boxprops=dict(facecolor=(1, 1, 1, 0), edgecolor='black'),
+                   medianprops=dict(color='darkblue', linewidth=2))
+
+# Adicionando uma linha horizontal discreta em PRU > 208
+ax.axhline(y=208, color='lightgrey', linestyle='--', linewidth=1.5, label='PRU > 208')
+
+# Configurando o intervalo do eixo y de 0 a 400
+ax.set_ylim(0, 400)
+
+# Adicionando título e rótulo do eixo y
+ax.set_title('CYP2C19', color='black')
+ax.set_ylabel("Unidades de reação P2Y12 (PRU)", color='black')
+
+# Adicionando título e rótulo do eixo y
+ax.set_ylabel("Unidades de reação P2Y12 (PRU)", color='black')
+
+# Configurando rótulos personalizados para o eixo x
+ax.set_xticks(positions)
+ax.set_xticklabels(group_names, rotation=45, ha='right', color='black')
+
+# Ajustando o aspecto do gráfico para 'comprimir' verticalmente
+ax.set_aspect(aspect=0.02)
+
+# Ajustando o layout para manter títulos e rótulos visíveis
+fig.subplots_adjust(bottom=0.25)  # Ajustando a parte inferior para acomodar rótulos rotacionados
+
+# Exibindo o gráfico
+plt.show()
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -7,14 +86,14 @@ group_names = ['(N=7) *1/*2', '(N=4) *2/*17', '(N=10) *1/*1', '(N=10) *1/*17', '
 
 # Valores para cada grupo
 data_values = [
-    [155, 258, 60, 173, 157, 75, 137],  # Valores para o grupo 1 (*1/*2) 
-    [312, 247, 168, 293],  # Valores para o grupo 2 (*2/*17) 
-    [252, 131, 229, 167, 173, 219, 101, 181, 101, 258],  # Valores para o grupo 3 (*1/*1) 
-    [167, 185, 221, 186, 187, 38, 79, 262, 115, 178],  # Valores para o grupo 4 (*1/*17) 
+    [155, 258, 60, 173, 157, 75, 137],  # Valores para o grupo 1 (*1/*2)
+    [312, 247, 168, 293],  # Valores para o grupo 2 (*2/*17)
+    [252, 131, 229, 167, 173, 219, 101, 181, 101, 258],  # Valores para o grupo 3 (*1/*1)
+    [167, 185, 221, 186, 187, 38, 79, 262, 115, 178],  # Valores para o grupo 4 (*1/*17)
     [200, 119, 166],  # Valores para o grupo 5 (*17/*17)
-    [128, 280, 58, 294 ],  # Valores para o grupo 6 (*1TA/*2TG) 
-    [107, 163, 112, 165, 57, 280, 98, 159, 324, 196, 175],  # Valores para o grupo 7 (*1/*1TG) 
-    [102],  # Valores para o grupo 8 (*1TG/1*TG) 
+    [128, 280, 58, 294 ],  # Valores para o grupo 6 (*1TA/*2TG)
+    [107, 163, 112, 165, 57, 280, 98, 159, 324, 196, 175],  # Valores para o grupo 7 (*1/*1TG)
+    [102],  # Valores para o grupo 8 (*1TG/1*TG)
     [68, 68, 109, 183]  # Valores para o grupo 9 (*1/*17TG)
 ]
 
