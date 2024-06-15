@@ -3,15 +3,15 @@ import numpy as np
 import pandas as pd
 
 # Nomes dos grupos correspondentes a cada conjunto de dados
-group_names = ['(N=11) *1/*2', '(N=4) *2/*17', '(N=22) *1/*1', '(N=14) *1/*17', '(N=3) *17/*17']
+group_names = ['(N=11) *1/*2', '(N=4) *2/*17', '(N=23) *1/*1', '(N=15) *1/*17', '(N=3) *17/*17']
 
 # Valores para cada grupo
 # Valores para cada grupo
 data_values = [
     [128, 155, 258, 280, 60, 173, 157, 58, 75, 137, 294],  # Valores para o grupo 1 (*1/*2)
     [312, 247, 168, 293],  # Valores para o grupo 2 (*2/*17)
-    [252, 131, 229, 167, 173, 219, 107, 101, 102, 163, 112, 165, 181, 57, 280, 101, 98, 159, 324, 258, 196, 175],  # Valores para o grupo 3 (*1/*1)
-    [167, 185, 221, 68, 186, 187, 38, 68, 79, 262, 115, 178, 109, 183],  # Valores para o grupo 4 (*1/*17)
+    [252, 131, 229, 167, 173, 219, 107, 101, 102, 163, 112, 165, 181, 57, 280, 101, 98, 159, 324, 258, 196, 175, 69],  # Valores para o grupo 3 (*1/*1)
+    [167, 185, 221, 68, 186, 187, 38, 68, 79, 262, 115, 178, 109, 183, 294],  # Valores para o grupo 4 (*1/*17)
     [200, 119, 166]  # Valores para o grupo 5 (*17/*17)
 ]
 
@@ -82,21 +82,21 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Nomes dos grupos correspondentes a cada conjunto de dados
-group_names = ['(N=7) *1/*2', '(N=4) *2/*17', '(N=10) *1/*1', '(N=10) *1/*17', '(N=3) *17/*17', '(N=4) *1/*2TG', '(N=11) *1/*1TG', '(N=1) *1TG/*1TG', '(N= 4) *1/*17TG']
+group_names = ['(N=8) *1/*2', '(N=4) *2/*17', '(N=11) *1/*1', '(N=11) *1/*17', '(N=3) *17/*17', '(N=3) *1TG/*2', '(N=11) *1/*1TG', '(N=1) *1TG/*1TG', '(N= 4) *1/*17TG']
 
 # Valores para cada grupo
 data_values = [
-    [155, 258, 60, 173, 157, 75, 137],  # Valores para o grupo 1 (*1/*2)
+  [155, 258, 60, 173, 157, 75, 137, 294],  # Valores para o grupo 1 (*1/*2)
     [312, 247, 168, 293],  # Valores para o grupo 2 (*2/*17)
-    [252, 131, 229, 167, 173, 219, 101, 181, 101, 258],  # Valores para o grupo 3 (*1/*1)
-    [167, 185, 221, 186, 187, 38, 79, 262, 115, 178],  # Valores para o grupo 4 (*1/*17)
+    [252, 131, 229, 167, 173, 219, 101, 181, 101, 258, 69],  # Valores para o grupo 3 (*1/*1)
+    [167, 185, 221, 186, 187, 38, 79, 262, 115, 178, 294],  # Valores para o grupo 4 (*1/*17)
     [200, 119, 166],  # Valores para o grupo 5 (*17/*17)
-    [128, 280, 58, 294 ],  # Valores para o grupo 6 (*1TA/*2TG)
+    [128, 280, 58],  # Valores para o grupo 6 (*1TG/*2)
     [107, 163, 112, 165, 57, 280, 98, 159, 324, 196, 175],  # Valores para o grupo 7 (*1/*1TG)
     [102],  # Valores para o grupo 8 (*1TG/1*TG)
-    [68, 68, 109, 183]  # Valores para o grupo 9 (*1/*17TG)
-]
+    [68, 68, 109, 183]  # Valores para o grupo 9 (*1TG/*17)
 
+]
 # Cores específicas para cada grupo
 group_colors = ['red', 'green', 'blue', 'orange', 'purple', 'brown', 'black', 'grey', 'pink']
 
