@@ -1,17 +1,20 @@
-import numpy as np # Biblioteca usada para realizar cálculos numéricos em arrays e matrizes de forma eficiente.
-import matplotlib.pyplot as plt # Biblioteca de plotagem usada para criar gráficos e visualizações de dados.
-from sklearn.linear_model import LinearRegression # Biblioteca de aprendizado de máquina, e essa importação é usada para acessar a função de regressão linear, permitindo realizar análises de regressão.
-import seaborn as sns # Seaborn é uma biblioteca de visualização de dados baseada no Matplotlib que fornece uma interface de alto nível para desenhar gráficos estatísticos atraentes.
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+import seaborn as sns
 from scipy import stats
-# Atualizando o código para gerar apenas um gráfico e incluir descrições dos resultados
 
-# Dados de PRU
+# Dados de PRU (ajustados para 56 elementos)
 pru_values = np.array([
-   155, 258, 173, 75, 137, 128, 58
+    155, 258, 60, 173, 157, 75, 137, 294, 128, 280, 58         
 ])
 
-# Dados de presença/ausência do haplótipo (Presença = 1, Ausência = -1)
-haplotype_presence = np.array([1, 1, 1, 1, 1, 0, 0])
+# Dados de presença/ausência do haplótipo (Presença = 1, Ausência = 0, ajustados para 54 elementos)
+haplotype_presence = np.array([0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1])
+
+# Verificando os comprimentos
+print(f'Comprimento de pru_values: {len(pru_values)}')
+print(f'Comprimento de haplotype_presence: {len(haplotype_presence)}')
 
 # Reshape dos dados para se adequar ao formato exigido pela função de regressão do sklearn
 X = haplotype_presence.reshape(-1, 1)
@@ -32,15 +35,16 @@ coefficient = model.coef_[0]
 intercept = model.intercept_
 
 # Realizando o teste t para obter o valor-p
-t_statistic, p_value = stats.ttest_ind(Y[X.flatten() == 1], Y[X.flatten() == -1])
+t_statistic, p_value = stats.ttest_ind(Y[haplotype_presence == 1], Y[haplotype_presence == 0], equal_var=False)
 
 # Visualização dos dados e da linha de regressão em um único gráfico
 plt.figure(figsize=(10, 6))
-sns.scatterplot(x=haplotype_presence, y=pru_values, color='blue', label='Dados Observados')
-sns.lineplot(x=haplotype_presence, y=predictions, color='red', label='Linha de Regressão')
+sns.scatterplot(x=haplotype_presence, y=pru_values, color='blue')
+sns.lineplot(x=haplotype_presence, y=predictions, color='red')
 
-plt.title('Regressão Linear da Presença de um único alelo com Haplótipo em relação ao PRU em individuos *1/*2')
-plt.xlabel('Presença/Ausência do Haplótipo')
+plt.xticks([0, 1], ['Ausente', 'Presente'])
+plt.title('Regressão Linear da Presença do Haplótipo em relação a PRU em indivíduos *1/*2')
+plt.xlabel('Presença do Haplótipo')
 plt.ylabel('PRU (Agregação Plaquetária)')
 plt.legend()
 plt.show()
