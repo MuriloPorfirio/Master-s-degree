@@ -38,15 +38,17 @@ intercept = model.intercept_
 t_statistic, p_value = stats.ttest_ind(Y[haplotype_presence == 1], Y[haplotype_presence == 0], equal_var=False)
 
 # Visualização dos dados e da linha de regressão em um único gráfico
-plt.figure(figsize=(10, 6))
-sns.scatterplot(x=haplotype_presence, y=pru_values, color='blue', label='Dados Observados')
-sns.lineplot(x=haplotype_presence, y=predictions, color='red', label='Linha de Regressão')
+plt.figure(figsize=(6, 4))  # Reduzindo o tamanho da figura para ser mais compacta
+sns.scatterplot(x=haplotype_presence, y=pru_values, color='blue', s=100)
+sns.lineplot(x=haplotype_presence, y=predictions, color='red', linewidth=2)
 
-plt.xticks([0, 1], ['Ausente', 'Presente'])
-plt.title('Regressão Linear da Presença do Haplótipo em relação a PRU em indivíduos *1/*1')
-plt.xlabel('Presença do Haplótipo')
-plt.ylabel('PRU (Agregação Plaquetária)')
-plt.legend()
+plt.xticks([0, 1], ['Ausente', 'Presente'], fontsize=12)
+plt.yticks(fontsize=12)
+plt.title('', fontsize=14)
+plt.xlabel('Presença do Haplótipo', fontsize=12)
+plt.ylabel('PRU (Agregação Plaquetária)', fontsize=12)
+plt.legend(fontsize=12)
+plt.tight_layout()  # Ajusta a figura para ocupar melhor o espaço
 plt.show()
 
 # Exibindo e descrevendo as métricas da regressão
@@ -54,3 +56,4 @@ print(f'Coeficiente de Determinação (R^2): {r_squared:.4f}')
 print(f'Coeficiente do Modelo (Efeito do Haplótipo): {coefficient:.4f}')
 print(f'Intercepto do Modelo (Valor de PRU quando o Haplótipo está ausente): {intercept:.4f}')
 print(f'Valor-p do Teste t (Significância Estatística do Efeito do Haplótipo): {p_value:.4e}')
+
