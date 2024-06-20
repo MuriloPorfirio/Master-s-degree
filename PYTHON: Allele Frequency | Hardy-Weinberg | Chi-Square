@@ -5,36 +5,55 @@ def hardy_weinberg_test(observed_counts):
     Perform Hardy-Weinberg equilibrium test on a given set of genotype counts.
 
     Args:
-    observed_counts (dict): Dictionary with genotype counts e.g., {'AA': 20, 'GA': 30, 'GG': 50}
+    observed_counts (dict): Dictionary with genotype counts e.g., {'*1/*1': 20, '*1/*2': 30, '*1/*3': 50, ...}
 
     Returns:
     dict: Dictionary containing allele frequencies, expected counts, chi-square test result, and interpretation.
     """
+    # Standardize genotype keys to a consistent order (e.g., '*1/*2' and not '*2/*1')
+    standardized_counts = {}
+    for genotype, count in observed_counts.items():
+        alleles = sorted(genotype.split('/'))
+        standardized_genotype = f'{alleles[0]}/{alleles[1]}'
+        if standardized_genotype in standardized_counts:
+            standardized_counts[standardized_genotype] += count
+        else:
+            standardized_counts[standardized_genotype] = count
+
     # Step 1: Calculate allele frequencies
-    # Extracting counts for each genotype
-    count_AA = observed_counts['AA']
-    count_GA = observed_counts['GA']
-    count_GG = observed_counts['GG']
-
-    # Total number of alleles
-    total_alleles = 2 * (count_AA + count_GA + count_GG)
-
-    # Frequency of allele A
-    p = (2 * count_AA + count_GA) / total_alleles
-
-    # Frequency of allele G
-    q = (2 * count_GG + count_GA) / total_alleles
-
-    # Step 2: Calculate expected counts under Hardy-Weinberg equilibrium
-    total_individuals = count_AA + count_GA + count_GG
-    expected_AA = (p ** 2) * total_individuals
-    expected_GA = (2 * p * q) * total_individuals
-    expected_GG = (q ** 2) * total_individuals
-
-    # Step 3: Perform chi-square test
-    observed = [count_AA, count_GA, count_GG]
-    expected = [expected_AA, expected_GA, expected_GG]
+    counts = standardized_counts
+    alleles = ['*1', '*2', '*3', '*17']
     
+    # Total number of individuals
+    total_individuals = sum(counts.values())
+    
+    # Calculate allele frequencies
+    total_alleles = 2 * total_individuals
+    allele_counts = {allele: 0 for allele in alleles}
+
+    for genotype, count in counts.items():
+        allele1, allele2 = genotype.split('/')
+        allele_counts[allele1] += count
+        allele_counts[allele2] += count
+
+    allele_frequencies = {allele: count / total_alleles for allele, count in allele_counts.items()}
+    
+    # Step 2: Calculate expected counts under Hardy-Weinberg equilibrium
+    expected_counts = {}
+    for allele1 in alleles:
+        for allele2 in alleles:
+            if allele1 <= allele2:
+                freq1 = allele_frequencies[allele1]
+                freq2 = allele_frequencies[allele2]
+                if allele1 == allele2:
+                    expected_counts[f'{allele1}/{allele2}'] = (freq1 ** 2) * total_individuals
+                else:
+                    expected_counts[f'{allele1}/{allele2}'] = 2 * freq1 * freq2 * total_individuals
+    
+    # Step 3: Perform chi-square test
+    observed = [counts.get(genotype, 0) for genotype in expected_counts.keys()]
+    expected = [expected_counts[genotype] for genotype in expected_counts.keys()]
+
     chi2, p_value = stats.chisquare(observed, expected)
 
     # Interpretation based on p-value
@@ -46,8 +65,8 @@ def hardy_weinberg_test(observed_counts):
 
     # Compile results
     results = {
-        'Allele frequencies': {'p (A)': p, 'q (G)': q},
-        'Expected counts': {'AA': expected_AA, 'GA': expected_GA, 'GG': expected_GG},
+        'Allele frequencies': allele_frequencies,
+        'Expected counts': expected_counts,
         'Chi-square test': {'Chi2 value': chi2, 'p-value': p_value},
         'Interpretation': interpretation
     }
@@ -55,7 +74,10 @@ def hardy_weinberg_test(observed_counts):
     return results
 
 # Example use of the function with hypothetical genotype counts
-example_counts = {'AA': 20, 'GA': 30, 'GG': 50}
+example_counts = {
+    '*1/*1': 0, '*1/*2': 50, '*1/*3': 0, '*2/*2': 0, '*2/*3': 0,
+    '*1/*17': 150, '*2/*17': 50, '*3/*17': 0, '*17/*17': 0, '*3/*3': 0
+}
 results = hardy_weinberg_test(example_counts)
 
 results
