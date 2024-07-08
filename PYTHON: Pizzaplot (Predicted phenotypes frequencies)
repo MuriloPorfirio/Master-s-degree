@@ -17,7 +17,7 @@ labels = [f"{key}" for key in grupo_counts.keys()]
 percentages = [f'{size} ({size/total*100:.1f}%)' for size in sizes]
 
 # Cores em tons pastéis mais vívidos
-colors = ['#FFB6C1', '#89CFF0', '#FAE7B5', '#B39EB5', '#FFDFD3']
+colors = ['#FF6347', '#FFD700', '#4682B4', '#32CD32', '#32CD32']
 
 # Criando o gráfico de pizza
 fig, ax = plt.subplots(figsize=(10, 10), subplot_kw=dict(aspect="equal"))
