@@ -1,75 +1,47 @@
-# ----------------------- Haplo.stats ----------------------- 
-
-#Separando as colunas
-install.packages('X')
+#========================================================================
+# Phasing haplótipos
+#========================================================================
+#
+# (C) Copyright 2024, by GP-PGx-UFTM and Contributors.
+#
+# 
+#-----------------
+#  
+#-----------------
+#
+# Original Author:  Isadora Helena Tassoni, Guilherme Belfort-Almeida, Caique Manochio
+# Contributor(s):  
+# Updated by (and date): Guilherme Belfort-Almeida (02/08/2024)
+#
+# Dependencies: R
+#
+# Command line:
 
 library(haplo.stats)
 library(dplyr)
 library(tidyr)
 library(stringr)
-
 library(readxl)
-Murilo <- read_xlsx(choose.files(), sheet = "Planilha2")
 
-SNPsseparadosNAT <- Murilo %>% 
-  separate_wider_delim(rs11188059, "/", names = c("rs11188059_1", "rs11188059_2")) %>%
-  separate_wider_delim(rs2860840, "/", names = c("rs2860840_1", "rs2860840_2"))
+Input <- read_xlsx(choose.files(), sheet = "startg")
 
-
-
-#No haplo.em
-
-#removi coluna "ID"
+SNPsseparadosNAT <- Input %>%
+  separate_wider_delim(rs4244285star2, "/", names = c("rs4244285star2_1", "rs4244285star2_2")) %>%
+  separate_wider_delim(rs4986893star3, "/", names = c("rs4986893star3_1", "rs4986893star3_2")) %>%
+  separate_wider_delim(rs12248560star17, "/", names = c("rs12248560star17_1", "rs12248560star17_2")) %>%
+  separate_wider_delim(rs2860840, "/", names = c("rs2860840_1", "rs2860840_2")) %>%
+  separate_wider_delim(rs11188059, "/", names = c("rs11188059_1", "rs11188059_2"))
 
 SNPsNATSemID <- SNPsseparadosNAT
-SNPsNATSemID$ID <- NULL
+SNPsNATSemID$ID Pacientes <- NULL
+SNPsNATSemID$PRU <- NULL
 
-
-#cada locus tem um par de colunas adjascentes de alelos
-#a ordem das colunas é a ordem dos loci em um cromossomo
-#se houver N loci, o nº de colunas é 2N
-
-SNPsNATSemID2 <- SNPsNATSemID
-
-# Trocando 0 = G / 1 = A no rs11188059
-for (i in 1:nrow(SNPsNATSemID2)) {
-  if (SNPsNATSemID2[i, 1] == 0) {SNPsNATSemID2[i, 1] <- "G"}}
-
-for (i in 1:nrow(SNPsNATSemID2)) {
-  if (SNPsNATSemID2[i, 1] == 1) {SNPsNATSemID2[i, 1] <- "A"}}
-
-
-for (i in 1:nrow(SNPsNATSemID2)) {
-  if (SNPsNATSemID2[i, 2] == 0) {SNPsNATSemID2[i, 2] <- "G"}}
-
-for (i in 1:nrow(SNPsNATSemID2)) {
-  if (SNPsNATSemID2[i, 2] == 1) {SNPsNATSemID2[i, 2] <- "A"}}
-
-
-# Trocando 0 = T / 1 = C no rs2860840
-for (i in 1:nrow(SNPsNATSemID2)) {
-  if (SNPsNATSemID2[i, 3] == 0) {SNPsNATSemID2[i, 3] <- "T"}}
-
-for (i in 1:nrow(SNPsNATSemID2)) {
-  if (SNPsNATSemID2[i, 3] == 1) {SNPsNATSemID2[i, 3] <- "C"}}
-
-
-for (i in 1:nrow(SNPsNATSemID2)) {
-  if (SNPsNATSemID2[i, 4] == 0) {SNPsNATSemID2[i, 4] <- "T"}}
-
-for (i in 1:nrow(SNPsNATSemID2)) {
-  if (SNPsNATSemID2[i, 4] == 1) {SNPsNATSemID2[i, 4] <- "C"}}
-
-#talvez comece aqui murilo
-
-
-resulthaploNAT <- haplo.em(as.matrix(SNPsNATSemID2), locus.label = c('rs2860840', 'rs11188059'), miss.val=NA)
-
-
+resulthaplos <- haplo.em(as.matrix(SNPsNATSemID), locus.label = c('rs4244285star2','rs4986893star3',
+                                                                     'rs12248560star17', 'rs2860840', 'rs11188059'), miss.val=NA)
+resulthaplos[["haplotype"]]
 
 library(openxlsx)
-resultadoNAT <- summary(resulthaploNAT)
-resulthaploNAT[["haplotype"]]
 
-library(clipr)
-write.xlsx(resultadoNAT, 'resultadoNAT.xlsx')
+resultadohaplo <- summary(resulthaploNAT)
+
+write.xlsx(resultadohaplo, 'HaploStarTG.xlsx')
