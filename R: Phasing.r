@@ -23,7 +23,7 @@ library(tidyr)
 library(stringr)
 library(readxl)
 
-Input <- read_xlsx(choose.files(), sheet = "startg")
+Input <- read_xlsx(file.choose(), sheet = "startg")
 
 SNPsseparadosNAT <- Input %>%
   separate_wider_delim(rs4244285star2, "/", names = c("rs4244285star2_1", "rs4244285star2_2")) %>%
@@ -33,15 +33,18 @@ SNPsseparadosNAT <- Input %>%
   separate_wider_delim(rs11188059, "/", names = c("rs11188059_1", "rs11188059_2"))
 
 SNPsNATSemID <- SNPsseparadosNAT
-SNPsNATSemID$ID Pacientes <- NULL
+SNPsNATSemID[["ID Pacientes"]] <- NULL
 SNPsNATSemID$PRU <- NULL
 
 resulthaplos <- haplo.em(as.matrix(SNPsNATSemID), locus.label = c('rs4244285star2','rs4986893star3',
-                                                                     'rs12248560star17', 'rs2860840', 'rs11188059'), miss.val=NA)
+                                                                  'rs12248560star17', 'rs2860840', 'rs11188059'), miss.val=NA)
 resulthaplos[["haplotype"]]
 
 library(openxlsx)
 
-resultadohaplo <- summary(resulthaploNAT)
+resultadohaplo <- summary(resulthaplos)
 
 write.xlsx(resultadohaplo, 'HaploStarTG.xlsx')
+
+
+
